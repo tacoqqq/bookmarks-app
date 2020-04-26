@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Rating from '../Rating/Rating';
 import './BookmarkItem.css';
 import config from '../config';
@@ -14,9 +15,11 @@ function deleteBookmarkRequest(bookmarkId, callback){
   })
   .then(res => {
     if (!res.ok){
-      throw new Error(res.status)
+      return res.json.then(error => {
+        throw error
+      })
     }
-    return (res.json())
+    return res
   })
   .then(data => {
     callback(bookmarkId)
@@ -26,8 +29,11 @@ function deleteBookmarkRequest(bookmarkId, callback){
   })
 }
 
-export default function BookmarkItem(props) {
+function updateBookmarkRequest(bookmarkId, callback){
+  console.log('hello')
+}
 
+export default function BookmarkItem(props) {
   return (
     <BookmarksContext.Consumer>
       { (context) => {
@@ -53,6 +59,11 @@ export default function BookmarkItem(props) {
                 onClick={() => deleteBookmarkRequest(props.id , context.deleteBookmark)}
               >
                 Delete
+              </button>
+              <button
+                className='BookmarkItem__description'
+              >
+                <Link to={`/${props.id}/edit`}>Update</Link>
               </button>
             </div>
           </li>
